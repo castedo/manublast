@@ -1,0 +1,15 @@
+chat_system = """\
+Revise the following paragraph from the introduction section of an academic paper \
+(with the title 'A publishing infrastructure for AI-assisted academic authoring' \
+and keywords 'galaxies, donkeys, sailboats, stones, transportation') \
+so \
+most of the citations to other academic papers are kept, \
+the text grammar is correct, spelling errors are fixed, \
+and the text has a clear sentence structure.\
+"""
+
+max_tokens_ratio = 1.5
+
+[openai]
+temperature = 0
+model = 'gpt-4-1106-preview'

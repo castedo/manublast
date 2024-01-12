@@ -4,7 +4,7 @@ This `manublast` repository is an example "blast" repository for:
    [copyblaster/gen_prompt_space.py](https://gitlab.com/castedo/copyblaster/-/blob/main/gen_prompt_space.py)
    to generate 
 
-2. large spaces of prompts, see TBD ..., which along with
+2. large spaces of prompts, for example, [manu1/](manu1/), which along with
 
 3. test source input files, see TBD ..., can be used with
    [copyblaster/blast_cases.py](https://gitlab.com/castedo/copyblaster/-/blob/main/blast_cases.py)

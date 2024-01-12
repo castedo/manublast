@@ -1,0 +1,15 @@
+chat_system = """\
+Revise the following paragraph from the random section of an academic paper \
+(with the title 'A publishing infrastructure for AI-assisted academic authoring' \
+and keywords 'manubot, artificial intelligence, scholarly publishing, software') \
+so \
+the text grammar is correct, spelling errors are fixed, \
+the text is in passive voice, \
+and the text has a clear sentence structure.\
+"""
+
+max_tokens_ratio = 1.5
+
+[openai]
+temperature = 0
+model = 'gpt-4-1106-preview'
