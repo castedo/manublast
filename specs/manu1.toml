@@ -1,0 +1,127 @@
+# For the TOML file format, visit https://toml.io
+# For Jinja template syntax, visit https://jinja.palletsprojects.com/en/3.0.x/templates/
+
+# This TOML file is a prompt space specification for systematically testing a high
+# dimensional space of AI prompts.
+# This file is read by copyblaster/gen_prompt_space.py to generate a large number of
+# query settings files which in turn can be used by either CopyAId or
+# copyblaster/blast_cases.py.
+
+# Each top-level TOML table defines a parameterized subspace of variables for
+# rendering prompts.
+# The space "main" is the one that will be used to generate prompts inside query settings files.
+# The 'system_prompt` variable of the `main` space is used to generate a system prompt.
+
+
+[main]
+# Spaces can expand other subspaces.
+expands = "base"
+
+
+# the `postvar` TOML table renders variables after space parameter are assigned.
+
+[main.postvar]
+
+instruction = """\
+Revise the following paragraph from the {{ section_name }} of an academic paper
+(with the title '{{ title }}'
+and keywords '{{ keywords |join(", ") }}')
+so
+{% for goal in extra_goals %}
+{{ goal }},
+{% endfor -%}
+{% if jargon %}{{ jargon }},
+{% endif %}
+the text grammar is correct, spelling errors are fixed,
+{% if voice %}{{ voice }},
+{% endif %}
+and the text has a clear sentence structure.
+"""
+
+# `unilinify` is Jinja filter provided by gen_prompt_space.py.o
+# It encoded a multi-line string to be a TOML string expression
+# that TOML will read as a single line (with newlines replaced with spaces).
+
+system_prompt = "{{ instruction|unilinify }}{{ eom }}"
+
+
+# The `param` TOML subtable within a TOML table defines the parameters of a space.
+# Each parameter is defined by another subtable. The name of the subtable becomes
+# a new variable. The values of the variable are the values of the contained
+# key/value paris. The keys will be used when generated a big long directory name for
+# the generated query settings files.
+
+[main.param.voice]
+
+"" = ""
+active = "the text is in active voice"
+passive = "the text is in passive voice"
+
+[main.param.jargon]
+
+"" = ""
+minj = "the text minimizes the use of jargon"
+maxj = "the text maximizes the use of jargon"
+
+[main.param.extra_goals]
+
+"" = []
+
+clear = [
+  "{{ q_clear }}",
+  "{{ sol_clear }}",
+]
+
+keep = [
+  "{{ cite_keep }}",
+]
+
+unclear = [
+  "{{ q_unclear }}",
+  "{{ sol_unclear }}",
+]
+
+drop = [
+  "{{ cite_drop }}",
+]
+
+
+# The `prevar` TOML subtable renders variable BEFORE parameters of subspace are rendered.
+
+[main.prevar]
+
+q_clear = "the research problem/question is clear"
+q_unclear = "the research problem/question is unclear"
+
+sol_clear = "the solution proposed is clear"
+sol_unclear = "the solution proposed is unclear"
+
+cite_keep = "most of the citations to other academic papers are kept"
+cite_drop = "most of the citations to other academic papers are dropped"
+
+
+
+# Subspaces can be called anything. Another space called 'base' follows. It is
+# expanded by other spaces.
+
+# ending instruction with a newline, or not, is cheap way to test stability of response
+[base.param.eom]
+e0 = ""
+e1 = "\n"
+
+[base.param.keywords]
+
+kinfra = ["manubot", "artificial intelligence", "scholarly publishing", "software"]
+kloco1 = ["galaxies", "donkeys", "sailboats", "stones", "transportation"]
+
+[base.param.title]
+
+tinfra = "A publishing infrastructure for AI-assisted academic authoring"
+tloco1 = "On the limitation of intergalatic stone transporation via donkey powered sailboats"
+
+[base.param.section_name]
+
+abstr = "abstract"
+intro = "introduction section"
+discu = "discussion section"
+rando = "random section"
